@@ -109,7 +109,11 @@ You must call properties that are in snake case to camel case.
 ```php
 DB::maxRows() // Returns the value 10000.
 ```
-3. You can add, edit or delete configuration data using config "context".
+3. You can edit configuration value by providing the first argument of the method called.
+```php
+DB::enable(false) // Change the value of "enable" to false.
+```
+4. You can add, edit or delete configuration data using config "context".
 ```php
 DB::context()->add("min_rows", 100); // This will add new configuration property.
 DB::context()->set("min_rows", 110); // This will edit "min_rows" value.

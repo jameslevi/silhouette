@@ -1,0 +1,19 @@
+{
+    "name": "jameslevi/silhouette",
+    "description": "Is a simple configuration management library that supports multiple configuration file formats.",
+    "keywords": [
+        "configuration"
+    ],
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "jameslevi/objectify": "^1.0",
+        "jameslevi/string": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Graphite\\Component\\Silhouette\\": "src/",
+            "App\\Config\\": "config/facade/"
+        }
+    }
+}

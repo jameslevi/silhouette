@@ -33,6 +33,7 @@ abstract class Facade extends Config
     public static function __callStatic(string $method, array $arguments)
     {
         $key        = str_camel_to_snake($method);
+        $value      = $arguments[0] ?? null;
         $config     = self::context();
 
         if(method_exists($config, $method))
@@ -41,7 +42,16 @@ abstract class Facade extends Config
         }
         else if($config->has($key))
         {
-            return $config->{$key};
+            if(!is_null($value))
+            {
+                $config->set($key, $value);
+
+                return $value;
+            }
+            else
+            {
+                return $config->{$key};
+            }
         }
     }
 

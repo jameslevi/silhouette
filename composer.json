@@ -12,8 +12,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Graphite\\Component\\Silhouette\\": "src/",
-            "App\\Config\\": "config/facade/"
+            "Graphite\\Component\\Silhouette\\": "src/"
         }
     }
 }

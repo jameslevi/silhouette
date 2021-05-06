@@ -7,14 +7,7 @@ use Graphite\Component\Objectify\Objectify;
 class Config extends Objectify
 {
     /**
-     * Current version of silhouette.
-     * 
-     * @var string
-     */
-    private static $version = "v1.0.0";
-
-    /**
-     * Supported configuration files.
+     * Supported config extensions.
      * 
      * @var array
      */
@@ -24,67 +17,38 @@ class Config extends Objectify
     );
 
     /**
-     * Configuration file.
-     * 
-     * @var string
-     */
-    private $file;
-
-    /**
      * Construct a new config data object.
      * 
-     * @param   string $file
+     * @param   mixed $source
      * @param   bool $muted
      * @return  void
      */
-    public function __construct(string $file, bool $muted = false)
+    public function __construct($source, bool $muted = false)
     {
-        $this->file = $file;
-
-        parent::__construct($this->load(), $muted);
+        parent::__construct(is_array($source) ? $source : ($this->load($source) ?? array()), $muted);
     }
 
     /**
-     * Load the configuration file and encapsulate data
-     * into data object.
+     * Load the configuration and return as array.
      * 
-     * @return array
+     * @param   string $filename
+     * @return  array
      */
-    private function load()
+    private function load(string $filename)
     {
-        if(file_exists($this->file) && is_readable($this->file) && $this->isSupported())
+        if(file_exists($filename) && is_readable($filename))
         {
-            if($this->extension() == 'php')
+            $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+            if($extension == 'php')
             {
-                return require $this->file;
+                return require_once $filename;
             }
-            else if($this->extension() == 'json')
+            else if($extension == 'json')
             {
-                return json_decode($this->file, true);
+                return json_decode($filename, true);
             }
         }
-
-        return array();
-    }
-
-    /**
-     * Return configuration file extension.
-     * 
-     * @return  string
-     */
-    public function extension()
-    {
-        return strtolower(pathinfo($this->file, PATHINFO_EXTENSION));
-    }
-
-    /**
-     * Determine if configuration file is supported.
-     * 
-     * @return  bool
-     */
-    public function isSupported()
-    {
-        return in_array($this->extension(), self::$supported);
     }
 
     /**
@@ -104,6 +68,6 @@ class Config extends Objectify
      */
     public static function version()
     {
-        return self::$version;
+        return 'Silhouette version 1.0.1';
     }
 }

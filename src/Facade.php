@@ -7,20 +7,20 @@ abstract class Facade extends Config
     /**
      * Store config instance.
      * 
-     * @var \Graphite\Component\Silhouette\Config
+     * @var array
      */
-    private static $instance;
+    private static $instances = array();
 
     /**
      * Construct a new configuration facade.
      * 
-     * @param   string $file
+     * @param   mixed $source
      * @param   bool $muted
      * @return  void
      */
-    public function __construct(string $file, bool $muted = false)
+    public function __construct($source, bool $muted = false)
     {
-        parent::__construct($file, $muted);
+        parent::__construct($source, $muted);
     }
 
     /**
@@ -32,7 +32,7 @@ abstract class Facade extends Config
      */
     public static function __callStatic(string $method, array $arguments)
     {
-        $key        = str_camel_to_snake($method);
+        $key        = str_camel_to_kebab($method);
         $value      = $arguments[0] ?? null;
         $config     = self::context();
 
@@ -62,13 +62,14 @@ abstract class Facade extends Config
      */
     public static function context()
     {
-        $class = get_called_class();
+        $class  = get_called_class();
+        $hash   = md5($class);
 
-        if(is_null(self::$instance))
+        if(!array_key_exists($hash, self::$instances))
         {
-            self::$instance = new $class();
+            self::$instances[$hash] = new $class();
         }
 
-        return self::$instance;
+        return self::$instances[$hash];
     }
 }
